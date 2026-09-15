@@ -1,30 +1,31 @@
 const express = require('express');
 const axios = require('axios');
 const app = express();
+const path = require('path');
 
 app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.set('views', path.join(__dirname, 'views'));
 
-// * Please DO NOT INCLUDE the private app access token in your repo. Don't do this practicum in your normal account.
-const PRIVATE_APP_ACCESS = 'pat-na2-4a160481-c449-480d-9fa6-762a936536d9';
+const PRIVATE_APP_ACCESS = 'pat-na2-242f036b-294b-4710-b11a-899ed6cdf818';
 
 app.get('/homepage-video_games', async (req, res) => {
-  const petsEndpoint = 'https://api.hubspot.com/crm/v3/objects/video_games?properties=name,msrp_price,retail_value';
+  const videoGamesEndpoint = 'https://api.hubspot.com/crm/v3/objects/0-970?properties=name,msrp_price,retail_value';
   const headers = {
-    Authorization: `Bearer ${private_app_token}`,
+    Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
     'Content-Type': 'application/json'
   }
   const params = {
     properties: ['name', 'msrp_price', 'retail_value'] // Add the property names you want here
   }
   try {
-    const response = await axios.get(petsEndpoint, { headers, params });
+    const response = await axios.get(videoGamesEndpoint, { headers, params });
     console.log('API Response:', JSON.stringify(response.data, null, 2));
-    const pets = response.data.results;
-    console.log('Video Game Data:', JSON.stringify(pets, null, 2));
-    res.render('homepage', { pets: pets });
+    const videoGames = response.data.results;
+    console.log('Video Game Data:', JSON.stringify(videoGames, null, 2));
+    res.render('homepage', { videoGames: videoGames });
   } catch (error) {
     console.error(error);
   }
@@ -39,10 +40,10 @@ app.get('/update-video_games', (req, res) => {
 });
 
 
-app.post('/update-pets', async (req, res) => {
-  const videoGamesEndpoint = 'https://api.hubspot.com/crm/v3/objects/video_games';
+app.post('/update-video_games', async (req, res) => {
+  const videoGamesEndpoint = 'https://api.hubspot.com/crm/v3/objects/0-970';
   const headers = {
-    Authorization: `Bearer ${private_app_token}`,
+    Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
     'Content-Type': 'application/json'
   }
   const data = {
